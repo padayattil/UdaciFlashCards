@@ -20,8 +20,8 @@ class HomeScreen extends React.Component {
     this.props.actions.asyncGetDecks();
   }
 
-  gotoPage = () => {
-    this.props.navigation.navigate('DeckDetail');
+  handleViewDeck = (deck) => {
+    this.props.navigation.navigate('DeckDetail', {deck});
   }
 
   render() {
@@ -30,7 +30,7 @@ class HomeScreen extends React.Component {
       <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'space-around' }}>
         {
           decks.length !== 0
-          ? decks.map((deck => <TouchableNativeFeedback key={deck.id} onPress={() => this.gotoPage()}><View style={{backgroundColor: 'red'}}><Text>{deck.title}</Text></View></TouchableNativeFeedback>))
+          ? decks.map((deck => <TouchableNativeFeedback key={deck.id} onPress={() => this.handleViewDeck(deck)}><View style={{backgroundColor: 'red'}}><Text>{deck.title}</Text></View></TouchableNativeFeedback>))
           : <View><Text>No decks to show.</Text></View>
         }
       </View>

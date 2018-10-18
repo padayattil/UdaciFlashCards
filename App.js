@@ -5,6 +5,7 @@ import { createStackNavigator } from 'react-navigation';
 
 import HomeScreen from './components/HomeScreen';
 import DeckDetailScreen from './components/DeckDetailScreen';
+import NewCardScreen from './components/NewCardScreen';
 import QuizScreen from './components/QuizScreen';
 import NewDeckScreen from './components/NewDeckScreen';
 import RootReducer from './reducers';
@@ -16,6 +17,9 @@ const RootNavigator = createStackNavigator({
   },
   DeckDetail: {
     screen: DeckDetailScreen
+  },
+  NewCard: {
+    screen: NewCardScreen
   },
   Quiz: {
     screen: QuizScreen

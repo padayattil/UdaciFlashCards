@@ -5,7 +5,7 @@ class QuizScreen extends React.Component {
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Deck Screen</Text>
+        <Text>Quiz Screen</Text>
       </View>
     );
   }
