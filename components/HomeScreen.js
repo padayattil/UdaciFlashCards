@@ -20,8 +20,8 @@ class HomeScreen extends React.Component {
     this.props.actions.asyncGetDecks();
   }
 
-  handleViewDeck = (deck) => {
-    this.props.navigation.navigate('DeckDetail', {deck});
+  handleViewDeck(deck_id) {
+    this.props.navigation.navigate('DeckDetail', {deck_id});
   }
 
   render() {
@@ -30,7 +30,7 @@ class HomeScreen extends React.Component {
       <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'space-around' }}>
         {
           decks.length !== 0
-          ? decks.map((deck => <TouchableNativeFeedback key={deck.id} onPress={() => this.handleViewDeck(deck)}><View style={{backgroundColor: 'red'}}><Text>{deck.title}</Text></View></TouchableNativeFeedback>))
+          ? decks.map((deck => <TouchableNativeFeedback key={deck.id} onPress={() => this.handleViewDeck(deck.id)}><View style={{backgroundColor: 'red'}}><Text>{deck.title}</Text></View></TouchableNativeFeedback>))
           : <View><Text>No decks to show.</Text></View>
         }
       </View>
@@ -39,15 +39,11 @@ class HomeScreen extends React.Component {
 }
 
 function mapStateToProps(state) {
-  return {
-    decks: state.decks
-  }
+  return { decks: state.decks };
 }
 
 function mapActionsToProps(dispatch) {
-  return {
-    actions: bindActionCreators(actions, dispatch)
-  };
+  return { actions: bindActionCreators(actions, dispatch) };
 }
 
 export default connect(mapStateToProps, mapActionsToProps)(HomeScreen);

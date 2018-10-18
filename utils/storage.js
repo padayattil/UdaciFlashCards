@@ -16,7 +16,7 @@ export function getDeck(deck_id) {
   return AsyncStorage.getItem(`DECK.${deck_id}`)
     .then(deckString => JSON.parse(deckString))
     .then(deckData => Promise.resolve(Promise.all(
-      deckData.map(card_id => getCard(deck.id, card_id))
+      deckData.card_ids.map(card_id => getCard(deckData.id, card_id))
     ).then(cards => ({id: deckData.id, title: deckData.title, cards}))));
 }
 
@@ -54,8 +54,19 @@ export function addCard(deck_id, question, answer) {
     answer,
     correctness: null
   }
-  return AsyncStorage.setItem(`CARD.${deck_id}.${card_id}`, JSON.stringify(deck))
+  return AsyncStorage.setItem(`CARD.${deck_id}.${card.id}`, JSON.stringify(card))
     .then(() => Promise.resolve(getDeck(deck_id)))
-    .then(deck => Promise.resolve(AsyncStorage.setItem(`DECK.${deck_id}`, JSON.stringify({...deck, ...{card_ids: [...deck.card_ids, card.id]}}))))
+    .then(deck => Promise.resolve(
+      AsyncStorage.setItem(`DECK.${deck_id}`, JSON.stringify({...deck, ...{card_ids: [...deck.cards, card.id]}}))
+    ))
     .then(() => card);
+}
+
+export function evaluateCard(deck_id, card_id, correctness) {
+  return AsyncStorage.getItem(`CARD.${deck_id}.${card_id}`)
+    .then(cardString => JSON.parse(cardString))
+    .then(card => Object.assign({}, card, {correctness}))
+    .then(card => Promise.resolve(
+      AsyncStorage.setItem(`CARD.${deck_id}.${card.id}`, JSON.stringify(card)).then(() => card)
+    ));
 }

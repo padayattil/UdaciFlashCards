@@ -16,7 +16,7 @@ class NewDeckScreen extends React.Component {
     title: ''
   }
 
-  handleAddDeck = () => {
+  handleAddDeck() {
     this.state.title
     ? this.props.actions.asyncAddDeck(this.state.title)
     : alert('Please enter a title for the new deck.')
@@ -32,23 +32,15 @@ class NewDeckScreen extends React.Component {
           value={this.state.text}
         />
         <KeyboardAvoidingView behavior='position'>
-          <Button title='Add Deck' onPress={this.handleAddDeck}/>
+          <Button title='Add Deck' onPress={() => this.handleAddDeck()}/>
         </KeyboardAvoidingView>
       </View>
     );
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    decks: state.decks
-  };
-}
-
 function mapActionsToProps(dispatch) {
-  return {
-    actions: bindActionCreators(actions, dispatch)
-  };
+  return { actions: bindActionCreators(actions, dispatch) };
 }
 
 export default connect(null, mapActionsToProps)(NewDeckScreen);

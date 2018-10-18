@@ -17,13 +17,14 @@ class NewCardScreen extends React.Component {
     answer: ''
   }
 
-  handleAddCard = (deck_id) => {
-    if (this.state.question) {
+  handleAddCard() {
+    const deck = this.props.decks[this.props.navigation.getParam('deck_id')];
+    if (!this.state.question) {
       alert('Please enter a question for the new card.');
-    } else if (this.state.answer) {
+    } else if (!this.state.answer) {
       alert('Please enter the answer for the new card.');
     } else {
-      this.props.actions.asyncAddCard(deck_id, this.state.question, this.state.answer);
+      this.props.actions.asyncAddCard(deck.id, this.state.question, this.state.answer);
     }
   }
 
@@ -32,18 +33,18 @@ class NewCardScreen extends React.Component {
       <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'space-around', padding: 10 }}>
         <TextInput
           style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-          onChangeText={(question) => this.setState(state => ({...state, question}))}
+          onChangeText={(question) => this.setState(state => Object.assign({}, state, {question}))}
           placeholder='Question'
           value={this.state.question}
         />
         <TextInput
           style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-          onChangeText={(answer) => this.setState(state => ({...state, answer}))}
+          onChangeText={(answer) => this.setState(state => Object.assign({}, state, {answer}))}
           placeholder='Answer'
           value={this.state.answer}
         />
         <KeyboardAvoidingView behavior='position'>
-          <Button title='Submit' onPress={this.handleAddCard}/>
+          <Button title='Submit' onPress={() => this.handleAddCard()} />
         </KeyboardAvoidingView>
       </View>
     );
@@ -51,15 +52,11 @@ class NewCardScreen extends React.Component {
 }
 
 function mapStateToProps(state) {
-  return {
-    decks: state.decks
-  };
+  return { decks: state.decks };
 }
 
 function mapActionsToProps(dispatch) {
-  return {
-    actions: bindActionCreators(actions, dispatch)
-  };
+  return { actions: bindActionCreators(actions, dispatch) };
 }
 
-export default connect(null, mapActionsToProps)(NewCardScreen);
+export default connect(mapStateToProps, mapActionsToProps)(NewCardScreen);

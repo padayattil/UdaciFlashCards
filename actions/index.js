@@ -26,7 +26,7 @@ export function addCard(card) {
   }
 }
 
-export function evaluateCard(deck_id, card_id, correctness) {
+export function evaluateCard(card) {
   return {
     type: EVALUATE_CARD,
     card
@@ -35,7 +35,7 @@ export function evaluateCard(deck_id, card_id, correctness) {
 
 export function asyncGetDecks() {
   return (dispatch) => {
-    API.getDecks()
+    return API.getDecks()
       .then((decks) => {
         dispatch(receiveDecks(decks))
       })
@@ -44,7 +44,7 @@ export function asyncGetDecks() {
 
 export function asyncAddDeck(title) {
   return (dispatch) => {
-    API.addDeck(title)
+    return API.addDeck(title)
       .then((deck) => {
         dispatch(addDeck(deck))
       })
@@ -53,14 +53,14 @@ export function asyncAddDeck(title) {
 
 export function asyncAddCard(deck_id, question, answer) {
   return (dispatch) => {
-    API.addCard(deck_id, question, answer)
+    return API.addCard(deck_id, question, answer)
       .then((card) => dispatch(addCard(card)))
   }
 }
 
 export function asyncEvaluateCard(deck_id, card_id, correctness) {
   return (dispatch) => {
-    API.addEvaludateCard(deck_id, question, answer)
+    return API.evaluateCard(deck_id, card_id, correctness)
       .then((card) => dispatch(evaluateCard(card)))
   }
 }
