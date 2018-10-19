@@ -4,7 +4,7 @@ FlashCards is an app that lets you Quiz yourself and see how you performed. At t
 
 ## Device Support
 
-The app has been tested only on Android.
+The app is built on React Native for cross-platform support but has been tested only on Android.
 
 ## TL;DR
 
