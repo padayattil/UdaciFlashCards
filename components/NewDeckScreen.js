@@ -3,14 +3,16 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
   View,
-  KeyboardAvoidingView,
   Text,
   TextInput,
-  Button } from 'react-native';
+  TouchableNativeFeedback } from 'react-native';
 
 import * as actions from  '../actions';
 
 class NewDeckScreen extends React.Component {
+  static navigationOptions = ({ navigation }) => ({
+    headerTitle: <Text style={{fontWeight: 'bold', fontSize: 20}}>New Deck</Text>
+  });
 
   state = {
     title: ''
@@ -19,21 +21,29 @@ class NewDeckScreen extends React.Component {
   handleAddDeck() {
     this.state.title
     ? this.props.actions.asyncAddDeck(this.state.title)
-    : alert('Please enter a title for the new deck.')
+      .then((deck) => this.props.navigation.replace('DeckDetail', {deck_id: deck.id}))
+    : alert('Please enter a title for your new deck.')
   }
 
   render() {
     return (
-      <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'space-around', padding: 10 }}>
-        <Text style={{alignSelf: 'center'}}>Add New Deck</Text>
-        <TextInput
-          style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-          onChangeText={(title) => this.setState({title})}
-          value={this.state.text}
-        />
-        <KeyboardAvoidingView behavior='position'>
-          <Button title='Add Deck' onPress={() => this.handleAddDeck()}/>
-        </KeyboardAvoidingView>
+      <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center', padding: 10 }}>
+        <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center', padding: 10 }}>
+          <Text style={{ fontWeight: 'bold', fontSize: 40, textAlign: 'center' }}>{'Enter a title for your new deck'}</Text>
+          <TextInput
+            style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+            placeholder='Deck Title'
+            onChangeText={(title) => this.setState({title})}
+            value={this.state.text}
+          />
+        </View>
+        <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center', padding: 10 }}>
+          <TouchableNativeFeedback onPress={() => this.handleAddDeck()}>
+            <View style={{ backgroundColor: '#4CAF50', height: 50, marginVertical: 10, alignItems: 'center', justifyContent: 'center'}}>
+              <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 20, color: 'white' }}>Add Deck</Text>
+            </View>
+          </TouchableNativeFeedback>
+        </View>
       </View>
     );
   }

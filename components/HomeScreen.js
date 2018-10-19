@@ -1,18 +1,20 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { View, Text, Button, TouchableNativeFeedback } from 'react-native';
+import { View, Text, TouchableNativeFeedback, FlatList } from 'react-native';
 
+import DeckListItem from './DeckListItem';
 import * as actions from  '../actions';
 
 class HomeScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    headerTitle: <Text>FlashCards</Text>,
+    headerTitle: <View style={{marginLeft: 10}}><Text style={{fontWeight: 'bold', fontSize: 20}}>FlashCards</Text></View>,
     headerRight: (
-      <Button
-        onPress={() => navigation.navigate('NewDeck')}
-        title="+"
-      />
+      <TouchableNativeFeedback onPress={() => navigation.navigate('NewDeck')}>
+        <View style={{ marginRight: 20, alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ fontWeight: 'bold', fontSize: 30, color: 'black' }}>+</Text>
+        </View>
+      </TouchableNativeFeedback>
     ),
   });
 
@@ -25,13 +27,20 @@ class HomeScreen extends React.Component {
   }
 
   render() {
-    const decks = Object.values(this.props.decks);
+    let decks = Object.values(this.props.decks).map(deck => Object.assign({}, deck, {key: deck.id}));
     return (
-      <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'space-around' }}>
+      <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'space-around', padding: 10 }}>
         {
           decks.length !== 0
-          ? decks.map((deck => <TouchableNativeFeedback key={deck.id} onPress={() => this.handleViewDeck(deck.id)}><View style={{backgroundColor: 'red'}}><Text>{deck.title}</Text></View></TouchableNativeFeedback>))
-          : <View><Text>No decks to show.</Text></View>
+          ? (
+              <FlatList
+                data={decks}
+                renderItem={({item}) => <DeckListItem deck={item} onPressHandler={() => this.handleViewDeck(item.id)}/>}
+              />
+            )
+          : (
+              <View><Text style={{fontWeight: 'bold', fontSize: 20, textAlign: 'center'}}>No decks to show.</Text></View>
+            )
         }
       </View>
     );

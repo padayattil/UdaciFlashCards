@@ -3,14 +3,16 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
   View,
-  KeyboardAvoidingView,
   Text,
   TextInput,
-  Button } from 'react-native';
+  TouchableNativeFeedback } from 'react-native';
 
 import * as actions from  '../actions';
 
 class NewCardScreen extends React.Component {
+  static navigationOptions = ({ navigation }) => ({
+    headerTitle: <Text style={{fontWeight: 'bold', fontSize: 20}}>New Card</Text>
+  });
 
   state = {
     question: '',
@@ -24,28 +26,41 @@ class NewCardScreen extends React.Component {
     } else if (!this.state.answer) {
       alert('Please enter the answer for the new card.');
     } else {
-      this.props.actions.asyncAddCard(deck.id, this.state.question, this.state.answer);
+      this.props.actions.asyncAddCard(deck.id, this.state.question, this.state.answer)
+        .then(() => this.props.navigation.goBack());
     }
   }
 
   render() {
     return (
-      <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'space-around', padding: 10 }}>
-        <TextInput
-          style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-          onChangeText={(question) => this.setState(state => Object.assign({}, state, {question}))}
-          placeholder='Question'
-          value={this.state.question}
-        />
-        <TextInput
-          style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-          onChangeText={(answer) => this.setState(state => Object.assign({}, state, {answer}))}
-          placeholder='Answer'
-          value={this.state.answer}
-        />
-        <KeyboardAvoidingView behavior='position'>
-          <Button title='Submit' onPress={() => this.handleAddCard()} />
-        </KeyboardAvoidingView>
+      <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center', padding: 10 }}>
+        <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center', padding: 10 }}>
+          <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center', padding: 10 }}>
+            <Text style={{ fontWeight: 'bold', fontSize: 20, textAlign: 'center' }}>{'Enter the question'}</Text>
+            <TextInput
+              style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+              placeholder='Question'
+              onChangeText={(question) => this.setState(state => Object.assign({}, state, {question}))}
+              value={this.state.question}
+            />
+          </View>
+          <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center', padding: 10 }}>
+            <Text style={{ fontWeight: 'bold', fontSize: 20, textAlign: 'center' }}>{'Enter the answer'}</Text>
+            <TextInput
+              style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+              placeholder='Answer'
+              onChangeText={(answer) => this.setState(state => Object.assign({}, state, {answer}))}
+              value={this.state.answer}
+            />
+          </View>
+        </View>
+        <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'flex-end', padding: 10 }}>
+          <TouchableNativeFeedback onPress={() => this.handleAddCard()}>
+            <View style={{ backgroundColor: '#4CAF50', height: 50, marginVertical: 10, alignItems: 'center', justifyContent: 'center'}}>
+              <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 20, color: 'white' }}>Submit</Text>
+            </View>
+          </TouchableNativeFeedback>
+        </View>
       </View>
     );
   }

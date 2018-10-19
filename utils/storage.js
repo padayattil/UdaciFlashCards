@@ -1,6 +1,6 @@
 import { AsyncStorage } from 'react-native';
 
-import { generateUID } from './index';
+import { generateUID, filteredObject } from './index';
 
 export function getDeckIds() {
   return AsyncStorage.getItem('DECK_IDS')
@@ -62,6 +62,13 @@ export function addCard(deck_id, question, answer) {
     .then(() => card);
 }
 
+export function deleteDeckCards(deck_id, card_ids) {
+  return Promise.all(card_ids.map(card_id => AsyncStorage.removeItem(`CARD.${deck_id}.${card.id}`)))
+    .then(() => Promise.resolve(getDeck(deck_id)))
+    .then(deck => ({...deck, ...{cards: filteredObject(deck.cards, (card) => card_ids.includes(card.id))}}))
+    .then(deck => AsyncStorage.setItem(`DECK.${deck.id}`, JSON.stringify(deck)));
+}
+
 export function evaluateCard(deck_id, card_id, correctness) {
   return AsyncStorage.getItem(`CARD.${deck_id}.${card_id}`)
     .then(cardString => JSON.parse(cardString))
@@ -69,4 +76,20 @@ export function evaluateCard(deck_id, card_id, correctness) {
     .then(card => Promise.resolve(
       AsyncStorage.setItem(`CARD.${deck_id}.${card.id}`, JSON.stringify(card)).then(() => card)
     ));
+}
+
+export function deleteDeck(deck_id) {
+  return getDeck(deck_id)
+    .then(deck => Promise.resolve(deleteDeckCards(deck.id, Object.keys(deck.cards))))
+    .then(() => Promise.resolve(AsyncStorage.removeItem(`DECK.${deck_id}`)));
+}
+
+export function resetDeck(deck) {
+  const cards = {}
+  for (card_id of Object.keys(deck.cards)) {
+    cards[card_id] = Object.assign({}, deck.cards[card_id], {correctness: null})
+  }
+  const new_deck = Object.assign({}, deck, {cards})
+  return Promise.all(Object.values(new_deck.cards).map(card => evaluateCard(card.deck_id, card.id, null)))
+    .then(() => new_deck);
 }

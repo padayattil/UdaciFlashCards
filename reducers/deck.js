@@ -1,15 +1,19 @@
 import {
+  RECEIVE_DECKS,
   ADD_DECK,
+  DELETE_DECK,
   ADD_CARD,
-  EVALUATE_CARD,
-  RECEIVE_DECKS } from '../actions';
+  EVALUATE_CARD } from '../actions';
+import { filteredObject } from '../utils';
 
 export default function decks(state = {}, action) {
   switch (action.type) {
     case RECEIVE_DECKS:
-      return {...action.decks}
+      return {...state, ...action.decks}
     case ADD_DECK:
       return {...state, ...{[action.deck.id]: action.deck}}
+    case DELETE_DECK:
+      return filteredObject(state, (deck) => deck.id !== action.deck_id)
     case ADD_CARD: {
       const card = {
         deck_id: action.card.deck_id,
