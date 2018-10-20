@@ -5,6 +5,7 @@ export const ADD_DECK = 'ADD_DECK';
 export const DELETE_DECK = 'DELETE_DECK';
 export const ADD_CARD = 'ADD_CARD';
 export const EVALUATE_CARD = 'EVALUATE_CARD';
+export const COMPLETE_QUIZ = 'COMPLETE_QUIZ';
 
 export function receiveDecks(decks) {
   return {
@@ -38,6 +39,13 @@ export function evaluateCard(card) {
   return {
     type: EVALUATE_CARD,
     card
+  }
+}
+
+export function completeQuiz(timestamp) {
+  return {
+    type: COMPLETE_QUIZ,
+    timestamp
   }
 }
 
@@ -88,5 +96,19 @@ export function asyncDeleteDeck(deck_id) {
   return (dispatch) => {
     return API.deleteDeck(deck_id)
       .then(() => dispatch(deleteDeck(deck_id)));
+  };
+}
+
+export function asyncSetCompleteQuiz() {
+  return (dispatch) => {
+    return API.setCompleteQuiz()
+      .then((timestamp) => dispatch(completeQuiz(timestamp)));
+  };
+}
+
+export function asyncGetCompleteQuiz() {
+  return (dispatch) => {
+    return API.getCompleteQuiz()
+      .then((timestamp) => dispatch(completeQuiz(timestamp)));
   };
 }

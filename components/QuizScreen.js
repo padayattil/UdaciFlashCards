@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { View, Text, Button, TouchableNativeFeedback } from 'react-native';
 
 import * as actions from  '../actions';
+import { clearLocalNotification, setLocalNotification } from '../utils/helpers';
 
 class QuizScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -18,7 +19,11 @@ class QuizScreen extends React.Component {
     this.setState({view: 'answer'});
   }
 
-  handleEvaluateCard(deck_id, card_id, correctness) {
+  handleEvaluateCard(deck_id, card_id, correctness, cardsRemaining) {
+    if (cardsRemaining === 1) {
+      this.props.actions.asyncSetCompleteQuiz();
+      clearLocalNotification().then(setLocalNotification);
+    }
     this.props.actions.asyncEvaluateCard(
       deck_id,
       card_id,
@@ -61,7 +66,7 @@ class QuizScreen extends React.Component {
             <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center', padding: 10 }}>
               <Text style={{ fontWeight: 'bold', fontSize: 20, textAlign: 'center' }}>How was your guess?</Text>
               <View style={{ alignItems: 'stretch', justifyContent: 'flex-start'}}>
-                <TouchableNativeFeedback onPress={() => this.handleEvaluateCard(card.deck_id, card.id, 'correct')}>
+                <TouchableNativeFeedback onPress={() => this.handleEvaluateCard(card.deck_id, card.id, 'correct', unAnsweredCards.length)}>
                   <View style={{ backgroundColor: '#4CAF50', height: 50, marginVertical: 10, alignItems: 'center', justifyContent: 'center'}}>
                     <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 20, color: 'white' }}>Correct</Text>
                   </View>

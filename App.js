@@ -10,6 +10,7 @@ import QuizScreen from './components/QuizScreen';
 import NewDeckScreen from './components/NewDeckScreen';
 import RootReducer from './reducers';
 import middleware from './middleware';
+import { setLocalNotification } from './utils/helpers';
 
 const RootNavigator = createStackNavigator({
   Home: {
@@ -30,6 +31,10 @@ const RootNavigator = createStackNavigator({
 }, { initialRouteName: 'Home' });
 
 class App extends React.Component {
+  componentDidMount() {
+    setLocalNotification();
+  }
+
   render() {
     return (
       <Provider store={createStore(RootReducer, middleware)}>

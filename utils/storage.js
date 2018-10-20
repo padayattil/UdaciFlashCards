@@ -93,3 +93,13 @@ export function resetDeck(deck) {
   return Promise.all(Object.values(new_deck.cards).map(card => evaluateCard(card.deck_id, card.id, null)))
     .then(() => new_deck);
 }
+
+export function setCompleteQuiz() {
+  const timestamp = Date.now();
+  return AsyncStorage.setItem('COMPLETE_QUIZ_TIMESTAMP', JSON.stringify(timestamp))
+    .then(() => timestamp);
+}
+export function getCompleteQuiz() {
+  return AsyncStorage.getItem('COMPLETE_QUIZ_TIMESTAMP')
+    .then((timestamp) => JSON.parse(timestamp));
+}
